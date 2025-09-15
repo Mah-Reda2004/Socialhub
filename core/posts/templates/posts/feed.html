@@ -10,13 +10,13 @@
       <div class="card-body">
 
         <!-- Header: Profile Image + Username + Date -->
-        <div class="post-header" style="display: flex; align-items: center; gap: 10px;">
+        <div class="post-header" style="display: flex; align-items: flex-start; gap: 10px;">
           {% if post.author.profile.avatar %}
             <img src="{{ post.author.profile.avatar.url }}" alt="Profile Picture"
-                 style="width: 40px; height: 40px; border-radius: 50%;">
+                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin: 0;">
           {% else %}
             <img src="{% static 'default-avatar.png' %}" alt="Profile Picture"
-                 style="width: 40px; height: 40px; border-radius: 50%;">
+                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin: 0;">
           {% endif %}
           <div>
             <strong>{{ post.author.username }}</strong><br>
