@@ -8,6 +8,8 @@ from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+
 import random
 
 from .forms import RegisterForm, ProfileForm
