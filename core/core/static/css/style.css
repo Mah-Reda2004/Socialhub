@@ -1,5 +1,5 @@
 /* =========================
-   SocialHub Base CSS
+   SocialHub Complete CSS
 ========================= */
 
 /* Reset & Base */
@@ -34,7 +34,7 @@ nav a {
   font-weight: 600;
   padding: 8px 18px;
   border-radius: 24px;
-  transition: 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 nav a:hover {
   background: #fff;
@@ -69,7 +69,7 @@ main {
   font-size: 18px;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(66, 103, 178, 0.1);
-  transition: 0.2s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .create-post-btn button:hover {
   background: linear-gradient(90deg, #365899 60%, #00b894 100%);
@@ -83,11 +83,29 @@ main {
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(66, 103, 178, 0.07);
   padding: 24px;
-  transition: 0.2s;
-  overflow: hidden; /* يمنع خروج أي محتوى */
+  transition: box-shadow 0.2s;
+  overflow: hidden;
 }
 .card:hover {
   box-shadow: 0 8px 24px rgba(66, 103, 178, 0.12);
+}
+
+/* Card Image Improvements */
+.card img,
+img.post-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px auto 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(66,103,178,0.10);
+  border: 2px solid #e9f0fb;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card img:hover,
+img.post-image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 24px rgba(66,103,178,0.18);
 }
 
 /* Post Header */
@@ -117,7 +135,7 @@ main {
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: 0.2s;
+  transition: background 0.2s;
 }
 .post-actions .btn:hover {
   background: #e0e0e0;
@@ -161,11 +179,82 @@ main {
   background: #4267b2;
   color: #fff;
   cursor: pointer;
+  transition: background 0.2s;
 }
 .comment-form button:hover {
   background: #365899;
 }
 
+/* Forms (Login / Register / Post Form) */
+form {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(66, 103, 178, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+form label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+  color: #333;
+}
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #d1d8e0;
+  font-size: 15px;
+  background: #f7faff;
+  transition: border 0.3s, box-shadow 0.3s;
+  outline: none;
+  font-weight: 500;
+}
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #4267b2;
+  box-shadow: 0 0 8px rgba(66, 103, 178, 0.2);
+  background: #fff;
+}
+form button {
+  background: linear-gradient(90deg, #4267b2 60%, #00b894 100%);
+  color: #fff;
+  padding: 12px 0;
+  border: none;
+  border-radius: 24px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(66,103,178,0.1);
+}
+form button:hover {
+  background: linear-gradient(90deg, #365899 60%, #00b894 100%);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 4px 16px rgba(66,103,178,0.15);
+}
+form .form-text {
+  font-size: 0.85rem;
+  color: #555;
+}
+form .form-text a {
+  color: #4267b2;
+  text-decoration: none;
+  font-weight: 600;
+}
+form .form-text a:hover {
+  text-decoration: underline;
+}
+
+/* Messages */
 ul.messages {
   list-style: none;
   margin-bottom: 1rem;
@@ -188,16 +277,7 @@ footer {
   margin-top: auto;
   box-shadow: 0 -2px 8px rgba(66, 103, 178, 0.08);
 }
-img.post-image {
-  width: 100%;
-  max-width: 100%;
-  max-height: 400px;
-  height: auto;
-  object-fit: cover;
-  border-radius: 12px;
-  display: block;
-  margin-bottom: 16px;
-}
+
 /* Responsive */
 @media (max-width: 600px) {
   main {
@@ -221,7 +301,12 @@ img.post-image {
     padding: 10px 16px;
     font-size: 15px;
   }
-  .card {
+  .card,
+  form {
     padding: 16px;
+  }
+  .card img,
+  img.post-image {
+    max-height: 220px;
   }
 }
