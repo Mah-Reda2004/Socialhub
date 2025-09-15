@@ -1,0 +1,17 @@
+{% extends "account/base.html" %}
+{% block content %}
+  <h2>Posts</h2>
+  <a href="{% url 'post_create' %}">Create Post</a>
+  <ul>
+    {% for post in posts %}
+      <li>
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content }}</p>
+        {% if post.image %}
+          <img src="{{ post.image.url }}" width="200">
+        {% endif %}
+        <small>By {{ post.author.username }} on {{ post.created_at }}</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

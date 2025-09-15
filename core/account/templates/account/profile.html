@@ -1,0 +1,26 @@
+{% extends "account/base.html" %}
+
+{% block content %}
+<div class="profile">
+  <h2>{{ profile_user.username }}</h2>
+  {% if profile_user.profile.profile_pic %}
+    <img src="{{ profile_user.profile.profile_pic.url }}" alt="Profile Picture" width="150">
+  {% endif %}
+  <p>{{ profile_user.profile.bio }}</p>
+  <p>Location: {{ profile_user.profile.location }}</p>
+  <p>Birth date: {{ profile_user.profile.birth_date }}</p>
+
+  <h3>Posts</h3>
+  {% for post in posts %}
+    <div class="post">
+      <p>{{ post.text }}</p>
+      {% if post.image %}
+        <img src="{{ post.image.url }}" width="300">
+      {% endif %}
+      <small>{{ post.created_at }}</small>
+    </div>
+  {% empty %}
+    <p>No posts yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

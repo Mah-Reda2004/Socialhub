@@ -1,0 +1,162 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block title %}Feed{% endblock %}
+
+{% block content %}
+<div class="feed-container">
+  {% for post in posts %}
+    <div class="card mb-3">
+      <div class="card-body">
+
+        <!-- Header: Profile Image + Username + Date -->
+        <div class="post-header" style="display: flex; align-items: center; gap: 10px;">
+          {% if post.author.profile.avatar %}
+            <img src="{{ post.author.profile.avatar.url }}" alt="Profile Picture"
+                 style="width: 40px; height: 40px; border-radius: 50%;">
+          {% else %}
+            <img src="{% static 'default-avatar.png' %}" alt="Profile Picture"
+                 style="width: 40px; height: 40px; border-radius: 50%;">
+          {% endif %}
+          <div>
+            <strong>{{ post.author.username }}</strong><br>
+            <small class="text-muted">{{ post.created_at|date:"M d, Y H:i" }}</small>
+          </div>
+        </div>
+
+        <!-- Post Content -->
+        <div class="post-content mt-2">
+          <p>{{ post.text }}</p>
+          {% if post.image %}
+            <img src="{{ post.image.url }}" alt="Post Image" class="post-image" style="max-width:100%; border-radius:8px;">
+          {% endif %}
+        </div>
+
+        <!-- Like & Comment Buttons -->
+        <div class="post-actions mt-2">
+          <button class="btn like-btn {% if post.liked %}liked{% endif %}" data-post-id="{{ post.id }}">
+            👍 {% if post.liked %}Unlike{% else %}Like{% endif %}
+          </button>
+          <button class="btn comment-toggle" type="button">💬 Comment</button>
+
+          <!-- Delete Button (if owner) -->
+          {% if user == post.author %}
+            <button class="btn btn-danger btn-sm delete-post-btn" data-post-id="{{ post.id }}">
+              Delete Post
+            </button>
+          {% endif %}
+        </div>
+
+        <p class="likes-count mt-1">{{ post.likes.count }} Likes</p>
+
+        <!-- Comments Section -->
+        <div class="comments-section mt-2" style="display:none;">
+          <div class="comments-list">
+            {% for comment in post.comments.all %}
+              <p><b>{{ comment.user.username }}:</b> {{ comment.text }}</p>
+            {% empty %}
+              <p class="text-muted">No comments yet.</p>
+            {% endfor %}
+          </div>
+
+          <form method="post" class="comment-form mt-2" data-post-id="{{ post.id }}">
+            {% csrf_token %}
+            <div class="input-group">
+              <input type="text" name="text" class="form-control" placeholder="Write a comment...">
+              <button class="btn btn-primary" type="submit">Comment</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  {% empty %}
+    <p>No posts available.</p>
+  {% endfor %}
+</div>
+
+<!-- Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Toggle comments
+  document.querySelectorAll(".comment-toggle").forEach(btn => {
+    btn.addEventListener("click", function() {
+      const section = this.closest(".card-body").querySelector(".comments-section");
+      section.style.display = section.style.display === "none" ? "block" : "none";
+    });
+  });
+
+  // Like button
+  document.querySelectorAll(".like-btn").forEach(button => {
+    button.addEventListener("click", function () {
+      const postId = this.dataset.postId;
+      fetch(`/api/posts/${postId}/like/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/json",
+        },
+      })
+      .then(res => res.json())
+      .then(data => {
+        this.textContent = data.liked ? "👍 Unlike" : "👍 Like";
+        this.classList.toggle("liked", data.liked);
+        this.closest(".card-body").querySelector(".likes-count").textContent = `${data.likes_count} Likes`;
+      });
+    });
+  });
+
+  // Comment form
+  document.querySelectorAll(".comment-form").forEach(form => {
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      const postId = this.dataset.postId;
+      const textInput = this.querySelector("input[name='text']");
+      fetch(`/api/posts/${postId}/comment/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: textInput.value }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.error) { alert(data.error); return; }
+        const commentsList = this.closest(".comments-section").querySelector(".comments-list");
+        const newComment = document.createElement("p");
+        newComment.innerHTML = `<b>${data.user}:</b> ${data.text}`;
+        commentsList.appendChild(newComment);
+        textInput.value = "";
+      });
+    });
+  });
+
+  // Delete Post AJAX
+  document.querySelectorAll(".delete-post-btn").forEach(button => {
+    button.addEventListener("click", function(){
+      if(!confirm("Are you sure you want to delete this post?")) return;
+
+      const postId = this.dataset.postId;
+      const card = this.closest(".card");
+
+      fetch(`/post/${postId}/delete/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+      })
+      .then(res => {
+        if(res.ok){
+          card.remove();
+        } else {
+          alert("You are not allowed to delete this post.");
+        }
+      });
+    });
+  });
+
+});
+</script>
+{% endblock %}
