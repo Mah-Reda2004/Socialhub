@@ -4,4 +4,4 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["text", "image", "privacy"]  # استخدم الحقول الموجودة في الـ model
+        fields = ["text", "image", "privacy"]  
