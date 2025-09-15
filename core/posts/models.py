@@ -20,7 +20,7 @@ class Post(models.Model):
         return f"{self.author.username} - {self.text[:30]}"
 
     def is_liked_by(self, user):
-        return self.likes.filter(user=user).exists()  # عشان نستخدمها في التمبلت
+        return self.likes.filter(user=user).exists() 
 
 
 class Like(models.Model):
