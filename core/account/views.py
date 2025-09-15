@@ -115,7 +115,7 @@ def profile_settings(request):
 def password_reset_request(request):
     if request.method == "POST":
         email = request.POST.get("email")
-        users = User.objects.filter(email=email)
+        users = User.objects.filter(email=email).first()
 
         if not users.exists():
             messages.error(request, "This email is not registered.")
